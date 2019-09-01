@@ -1,5 +1,6 @@
 package com.example.slideshow;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,12 +29,17 @@ public class MainActivity extends AppCompatActivity {
 
     int mPosition = 0;
 
+    MediaPlayer mMediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mImageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher);
+
+        mImageSwitcher.setInAnimation(MainActivity.this,android.R.anim.slide_in_left);
+        mImageSwitcher.setOutAnimation(MainActivity.this,android.R.anim.slide_out_right);
 
         mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
@@ -61,6 +67,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mMediaPlayer = MediaPlayer.create(MainActivity.this,R.raw.getdown);
+        mMediaPlayer.setLooping(true);
+
+    }
+
+    //画面が表示された時に呼ばれるメソッド
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMediaPlayer.start();;
+    }
+
+    //画面が閉じられた時
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMediaPlayer.stop();
     }
 
     private void movePosition(int move){
